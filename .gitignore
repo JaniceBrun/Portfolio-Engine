@@ -1,5 +1,6 @@
 # Virtual environment
 venv/
+env/
 
 # Database locale (dati personali)
 db/portfolio.db
@@ -8,12 +9,19 @@ db/portfolio.db
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+.Python
+*egg-info/
 
 # Variabili d'ambiente
 .env
+.env.loval
 
-# VS Code
+# IDE
 .vscode/
+.idea/
+*.swp
+*.swo
 
 # File di sistema
 .DS_Store
@@ -23,4 +31,4 @@ Thumbs.db
 *.log
 
 # Report generati
-reports/*.pdf
+reports/
