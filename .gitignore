@@ -1,0 +1,26 @@
+# Virtual environment
+venv/
+
+# Database locale (dati personali)
+db/portfolio.db
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Variabili d'ambiente
+.env
+
+# VS Code
+.vscode/
+
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# Log
+*.log
+
+# Report generati
+reports/*.pdf

@@ -1,0 +1,29 @@
+
+
+- Path
+- [ ] Verificare che DB_PATH in db_manager.py usi '/' e non '\'
+      attuale: "db/portfolio.db" → OK su entrambi
+
+- Dipendenze
+- [ ] Eseguire su VM: pip install -r requirements.txt
+- [ ] Verificare che requirements.txt sia aggiornato con: pip freeze > requirements.txt
+
+
+-Virtual environment
+- [ ] Su Linux attivare venv con: source venv/bin/activate
+      (su Windows era: venv\Scripts\activate)
+
+
+-Encoding
+- [ ] Verificare che i file .py siano salvati in UTF-8
+      (VS Code lo mostra in basso a destra)
+
+### Permessi
+- [ ] Su Linux potrebbe servire: chmod +x main.py
+
+## Aggiunte in corso di sviluppo
+- (aggiornare man mano che emergono nuovi problemi)
+
+
+-valutare inserimento rollback() assieme ai commit()
+
