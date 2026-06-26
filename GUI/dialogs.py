@@ -43,7 +43,6 @@ class AddPositionDialog(object):
         self.__dialog.grab_set()
 
         # crea widget
-        self.__dialog.transient(self.__parent)
         self.__create_widgets()
 
     def __create_widgets(self):
@@ -54,7 +53,7 @@ class AddPositionDialog(object):
 
         # Ticker
         ttk.Label(main_frame, text="Ticker: ").grid(row=0, column=0, sticky=tk.W, pady=5)
-        ttk.Entry(main_frame, textvariable=self.__name_var, width=30).grid(row=1, column=1, pady=5)
+        ttk.Entry(main_frame, textvariable=self.__ticker_var, width=30).grid(row=0, column=1, pady=5)
 
         # Name
         ttk.Label(main_frame, text="Nome: ").grid(row=1, column=0, sticky=tk.W, pady=5)
@@ -64,7 +63,7 @@ class AddPositionDialog(object):
         ttk.Label(main_frame, text="Tipo: ").grid(row=2, column=0, sticky=tk.W, pady=5)
         type_combo = ttk.Combobox(
             main_frame,
-            textvariable=self._type_var,
+            textvariable=self.__type_var,
             values=["etf", "etc", "etn", "azione", "obbligazione", "crypto"],
             state="readonly",
             width=27            
@@ -73,18 +72,18 @@ class AddPositionDialog(object):
 
         # Quantity
         ttk.Label(main_frame, text="Quantità:").grid(row=3, column=0, sticky=tk.W, pady=5)
-        ttk.Entry(main_frame, textvariable=self._quantity_var, width=30).grid(row=3, column=1, pady=5)
+        ttk.Entry(main_frame, textvariable=self.__quantity_var, width=30).grid(row=3, column=1, pady=5)
 
         # Price
         ttk.Label(main_frame, text="Prezzo (€):").grid(row=4, column=0, sticky=tk.W, pady=5)
-        ttk.Entry(main_frame, textvariable=self._price_var, width=30).grid(row=4, column=1, pady=5)
+        ttk.Entry(main_frame, textvariable=self.__price_var, width=30).grid(row=4, column=1, pady=5)
 
         # Pulsanti
         button_frame = ttk.Frame(main_frame)
         button_frame.grid(row=5, column=0, columnspan=2, pady=20)
 
-        ttk.Button(button_frame, text="Aggiungi", command=self._on_ok).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Annulla", command=self._on_cancel).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="Aggiungi", command=self.__on_ok).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="Annulla", command=self.__on_cancel).pack(side=tk.LEFT, padx=5)
 
 
     def __on_ok(self):
@@ -106,7 +105,7 @@ class AddPositionDialog(object):
                 return
 
             # salva il risultato
-            self._result = {
+            self.__result = {
                 "ticker": ticker,
                 "name": name,
                 "type": type_,
@@ -119,7 +118,7 @@ class AddPositionDialog(object):
         except ValueError:
             messagebox.showerror("Errore", "Quantità e prezzo devono essere numeri")
 
-    def _on_cancel(self):
+    def __on_cancel(self):
         """Chiude il dialog senza salvare."""
         self.__result = None
         self.__dialog.destroy()
@@ -132,7 +131,7 @@ class AddPositionDialog(object):
         """
         self.__create_dialog()
         self.__parent.wait_window(self.__dialog)
-        return self._result            
+        return self.__result            
 
 
         

@@ -5,7 +5,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from GUI.dialogs import AddPositionDialog
-from db.db_manager import init_db, add_position, add_purchase, get_all_positions, remove_position
+from db.db_manager import init_db, add_position, add_purchase, get_all_positions, remove_position, add_or_update_position
 from modules.portfolio_logic import calculate_portfolio, update_prices
 
 # Creazione Classe PortfolioApp:
@@ -250,13 +250,21 @@ class PortfolioApp(object):
 
         if result:
             try:
-                position_id = add_position(result["ticker"], result["name"], result["type"])
-                add_purchase(position_id, result["quantity"], result["price"])
+                position_id = add_or_update_position(
+                    result["ticker"],
+                    result["name"],
+                    result["type"],
+                    result["quantity"],
+                    result["price"]
+                )
                 messagebox.showinfo("Successo", f"Posizione {result['ticker']} aggiunta!")
                 self.__refresh_portfolio()
             except Exception as e:
                 messagebox.showerror("Errore", f"Errore nell'aggiunta: {e}")
 
+            # try:
+            #     position_id = add_position(result["ticker"], result["name"], result["type"])
+            #     add_purchase(position_id, result["quantity"], result["price"])
     def __on_remove_position(self):
         """Gestisce la rimozione di una posizione"""
         selected = self.__treeview.selection()
