@@ -1,8 +1,8 @@
 """PORTFOLIO ENGINE - CLI principale"""
-
+import tabulate
 import argparse 
 from db.db_manager import (
-    init_db, add_position, add_purchase, get_all_positions, remove_position
+    init_db, add_position, add_purchase, get_all_positions, remove_position, get_position_by_ticker, get_price_history
 )
 from modules.portfolio_logic import calculate_portfolio , update_prices
 from modules.report_engine import generate_report, build_portfolio_object, print_portfolio_table
@@ -51,6 +51,13 @@ Esempi di utilizzo:
     report_parser.add_argument("--pdf", action="store_true", help="Genera report in PDF")
     report_parser.add_argument("--from", type=str, dest="from_date", help="Data inizio per delta (YYYY-MM-DD)")
 
+    # comando history
+    history_parser = subparser.add_parser("history", help="Mostra lo storico dei prezzi")
+    history_parser.add_argument("--ticker", required=True, help="Ticker dello strumento")
+    history_parser.add_argument("--from", dest="from_date", help="data da inizio (YYYY-MM-DD)")
+    history_parser.add_argument("--to", dest="to_date", help="Data fine (YYYY-MM-DD)")
+
+
     args = parser.parse_args()
 
     #inizializzo il db se non esiste
@@ -69,6 +76,8 @@ Esempi di utilizzo:
         handle_update()
     elif args.command == "report":
         handle_report(args)
+    elif args.command == "history":
+        handle_history(args)
     else:
         parser.print_help()
 
@@ -146,6 +155,30 @@ def handle_report(args: argparse.Namespace):
     except Exception as e:
         print(f"  ✗ Errore: {e}")
 
+def handle_history(args: argparse.Namespace):
+    try:
+        #recupera la posizione del ticker
+        position = get_position_by_ticker(args.ticker)
+        if not position:
+            print(f" Ticker no ntrovato: {args.ticker}")
+            return
+        position_id = position["id"]
+
+        #recupera lo storico
+        history = get_price_history(position_id, args.from_date, args.to_date)
+
+        if not history:
+            print("Nessuno storico disponibile per questo ticker")
+
+        #preparo tabella
+        rows = [
+            [h["recorded_on"], f"€ {h['price']:.4f}"]
+            for h in history
+        ]
+        print(tabulate(rows, headers=["Data", "Prezzo"], tablefmt="grid"))
+    
+    except Exception as e:
+        print(f"Errore: {e}")
 
 if __name__ == "__main__":
     main()

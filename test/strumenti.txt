@@ -1,0 +1,53 @@
+strumenti di esempio compatibili con yfinance.
+    # ETF
+    {"ticker": "VWCE.DE", "name": "Vanguard FTSE All-World", "type": "etf", "quantity": 10, "price": 150},
+    {"ticker": "EUNL.DE", "name": "iShares MSCI World", "type": "etf", "quantity": 5, "price": 80},
+    {"ticker": "CSPX.L", "name": "iShares S&P 500", "type": "etf", "quantity": 5, "price": 100},
+
+    # ETC
+    {"ticker": "GOLD.MI", "name": "WisdomTree Physical Gold", "type": "etc", "quantity": 10, "price": 45},
+    {"ticker": "WBIT.MI", "name": "WisdomTree Bitcoin", "type": "etc", "quantity": 1, "price": 30000},
+
+    # Azioni
+    {"ticker": "AAPL", "name": "Apple Inc.", "type": "azione", "quantity": 5, "price": 180},
+    {"ticker": "MSFT", "name": "Microsoft Corp.", "type": "azione", "quantity": 3, "price": 320},
+    {"ticker": "TSLA", "name": "Tesla Inc.", "type": "azione", "quantity": 2, "price": 250},
+
+    # Crypto
+    {"ticker": "BTC-USD", "name": "Bitcoin", "type": "crypto", "quantity": 0.01, "price":}
+
+comandi esempio per utilizzo CLI
+    python main.py show -> mostra tutte le posizioni presenti nel db, con valori aggiornati
+    python main.py show --type etf -> filtro su una sola tipologia
+    python main.py show --min-value 1000 -> filtro per valore minimo
+
+    #inserzione nuova posizione nel pf
+    python main.py add --ticker AAPL --name "Apple Inc." --type azione --quantity 5 --price 180
+    python main.py add --ticker VWCE.DE --name "Vanguard FTSE All-World" --type etf --quantity 10 --price 150
+
+    # rimozione di una posizione del db
+    python main.py remove --ticker NOME_TICKER
+
+    #Aggiornare i prezzi di mercato
+    python main.py update
+    *dopo l'utilizzo di questo ocmando show usa prezzi aggiornati
+    *history avrà nuovi record nello storico prezzi
+
+    # Vedere lo storico dei prezzi in db per un ticker
+    python main.py history --ticker VWCE.DE
+    *con intervallo date
+    python main.py history --ticker VWCE.DE --from 2024-01-01
+    python main.py history --ticker VWCE.DE --from 2024-01-01 --to 2024-06-30
+
+    # Repert che mostra P/L, valore tot, ha la possibilità di fare confronto tra data
+    python main.py report
+    python main.py report --from 2024-01-01
+
+
+
+
+
+
+
+
+

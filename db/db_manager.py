@@ -116,41 +116,6 @@ def add_or_update_position(ticker: str, name, type_, quantity, price, currency="
 
     return position_id
 
-# def add_position(ticker: str, name, type_, quantity, price, currency="EUR"):
-#     """Inserisce un nuovo strumento nel pf
-#        - se la posizione esite, aggiornala quantità
-#        - se non è presente la crea
-#        """
-    
-#     ticker = ticker.upper()
-
-#     with db_lock:
-#         conn = get_connection()
-#         cursor = conn.cursor()
-
-#         #verifico se la pos già essite
-#         cursor.execute("SELECT id FROM positions WHERE ticker = ?", (ticker))
-#         row = cursor.fetchone()
-
-#         if row:
-#             #pos già esistente
-#             position_id = row["id"]
-#         else:
-#             # posizione nuova
-#             cursor.execute("""
-#                 INSERT INTO positions ( ticker, name, type, currency)
-#                 VALUES (?, ?, ?, ?)
-#             """, (ticker, name, type_, currency))
-#             position_id = cursor.lastrowid
-        
-#         #aggiungo acquisto | aggiorno quantità
-#         cursor.execute("""
-#             INSERT INTO purchases (position_id, quantity, price, purchased_on)
-#             VALUES (?, ?, ?, ?)""", (position_id, quantity, price, str(date.today())))
-
-#         conn.commit()
-#         conn.close()
-#     return position_id
 
 def add_purchase(position_id, quantity, price, purchased_on=None):
     """
@@ -362,7 +327,7 @@ def get_latest_price(position_id):
 
     return dict(row) if row else None
 
-
+# funzione per recuperare un prezzo piu vicino alla data indicata(per calcolo delta)
 def get_price_by_date(position_id, date):
     """
     Recupera il prezzo salvato in price_history per una data specifica.
@@ -390,6 +355,41 @@ def get_price_by_date(position_id, date):
 
     return dict(row) if row else None
 
+#funzione per recupre prezzi di una posizione per calcolare history
+def get_price_history(position_id, from_date=None, to_date=None):
+    """
+    Recupera lo storico dei prezzi per una posizione.
+    - position_id: id della posizione
+    - from_date: data minima (YYYY-MM-DD) opzionale
+    - to_date: data massima (YYYY-MM-DD) opzionale
+    - restituisce una lista di dict: [{"recorded_on": "...", "price": ...}, ...]    
+    """
+    with db_lock:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT recorded_on, price
+            FROM price_history
+            WHERE position_id = ?
+        """
+        params = [position_id]
+
+        if from_date:
+            query += " AND recorded_on >= ? "
+            params.append(from_date)
+
+        if to_date:
+            query += " And recorded_on <= ?"
+            params.append(to_date)
+
+        query += " ORDER BY recorded_on ASC"
+
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
+        conn.close()
+
+    return [dict(row) for row in rows]
 
 
 
