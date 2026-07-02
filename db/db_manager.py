@@ -65,6 +65,8 @@ def init_db():
 
 # funzioni operative
 
+
+
 def add_position(ticker: str, name, type_, currency="EUR"):
     """Inserisce un nuovo strumento nel pf"""
     with db_lock:
@@ -95,10 +97,10 @@ def add_or_update_position(ticker: str, name, type_, quantity, price, currency="
         row = cursor.fetchone()
 
         if row:
-            # Esiste → aggiungo acquisto
+            # Esiste - aggiungo acquisto
             position_id = row["id"]
         else:
-            # Non esiste → creo posizione
+            # Non esiste - creo posizione
             cursor.execute("""
                 INSERT INTO positions (ticker, name, type, currency)
                 VALUES (?, ?, ?, ?)
@@ -142,7 +144,7 @@ def add_purchase(position_id, quantity, price, purchased_on=None):
         conn.commit()
         conn.close()
 
-def get_position_by_ticker(ticker):
+def get_position_by_ticker(ticker: str):
     """
     Crea una posizione nel db tramite ticker.
     restituisce il record come dizionario, oppure None se non esiste.
@@ -213,11 +215,11 @@ def get_position_summary(position_id):
     return dict(row) if row and row["total_quantity"] else None
 
 
-def remove_position(ticker):
+def remove_position(ticker: str):
     """
     Rimuove una posizione e tutti i suoi acquisti dal database.
     Restituisce True se la posizione esisteva, False se non trovata.
-    - ticker: es. 'VWCE.MI'
+    - ticker: es. 'VWCE.DE'
     """
     with db_lock:
         conn = get_connection()
