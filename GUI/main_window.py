@@ -166,17 +166,6 @@ class PortfolioApp(object):
 
         self.__treeview.pack(fill=tk.BOTH, expand=True)
 
-        # placeholder = tk.Label(
-        #     self.__center_frame,
-        #     text="Qui andrà il portafoglio",
-        #     font=("Arial", 14),
-        #     bg=self.bg_colour            
-        # )
-        # placeholder.pack(pady=20)
-
-        # # pulsanti
-        # self.__create_button_frame()
-
     def __create_button_frame(self):
         """Crea i pulsanti di controlla"""
         button_frame = tk.Frame(self.__root, bg=self.bg_colour)
@@ -262,9 +251,7 @@ class PortfolioApp(object):
             except Exception as e:
                 messagebox.showerror("Errore", f"Errore nell'aggiunta: {e}")
 
-            # try:
-            #     position_id = add_position(result["ticker"], result["name"], result["type"])
-            #     add_purchase(position_id, result["quantity"], result["price"])
+
     def __on_remove_position(self):
         """Gestisce la rimozione di una posizione"""
         selected = self.__treeview.selection()
@@ -293,9 +280,55 @@ class PortfolioApp(object):
             messagebox.showerror("Errore", f"Errore nell'aggiornamento: {e}")
 
     def __on_generate_report(self):
-        """Gestisce la generazione del report"""        
-        messagebox.showinfo("Info", "Feature in sviluppo")
-        # todo -> implement gen report
+        """
+        Genera un report leggibile del portafoglio e lo mostra in una finestra dedicata.
+        """
+        try:
+            # 1. Calcola il portafoglio
+            portfolio_data = calculate_portfolio()
+
+            # 2. Costruisci il testo del report
+            report_lines = []
+            report_lines.append("=== REPORT PORTAFOGLIO ===\n")
+
+            total_value = portfolio_data["total_value"]
+            total_cost = portfolio_data["total_cost"]
+            total_pl_abs = portfolio_data["total_pl_abs"]
+            total_pl_pct = portfolio_data["total_pl_pct"]
+
+            report_lines.append(f"Valore Totale: € {total_value:.2f}")
+            report_lines.append(f"Costo Totale: € {total_cost:.2f}")
+            report_lines.append(f"P/L Totale: € {total_pl_abs:.2f} ({total_pl_pct:.2f}%)\n")
+
+            report_lines.append("Dettaglio posizioni:\n")
+
+            for pos in portfolio_data["positions"]:
+                report_lines.append(
+                    f"- {pos['ticker']} | {pos['name']} | {pos['type'].upper()}\n"
+                    f"  Quantità: {pos['quantity']:.2f}\n"
+                    f"  Prezzo Medio: € {pos['avg_price']:.2f}\n"
+                    f"  Prezzo Attuale: € {pos['current_price']:.2f}\n"
+                    f"  Valore Attuale: € {pos['current_value']:.2f}\n"
+                    f"  P/L: € {pos['pl_abs']:.2f} ({pos['pl_pct']:.2f}%)\n"
+                    f"  Peso: {pos['weight_pct']:.2f}%\n"
+                )
+
+            report_text = "\n".join(report_lines)
+
+            # 3. Crea finestra popup per mostrare il report
+            report_window = tk.Toplevel(self.__root)
+            report_window.title("Report Portafoglio")
+            report_window.geometry("600x700")
+
+            text_widget = tk.Text(report_window, wrap="word", font=("Arial", 12))
+            text_widget.pack(fill=tk.BOTH, expand=True)
+            text_widget.insert("1.0", report_text)
+
+            # 4. Rendi il testo non modificabile
+            text_widget.config(state="disabled")
+
+        except Exception as e:
+            messagebox.showerror("Errore", f"Errore nella generazione del report: {e}")
 
 
 def main():

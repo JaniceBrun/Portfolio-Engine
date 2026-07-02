@@ -123,7 +123,7 @@ def get_portfolio_data( reference_date=None):
     - restituisce una lista di dizionari con tutti i valori calcolati per ogni posizione    
     """
     positions = get_all_positions()
- 
+
     if not positions:
         return []
     

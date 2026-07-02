@@ -1,6 +1,6 @@
 import yfinance as yf
 
-def get_current_price(ticker):
+def get_current_price(ticker: str):
     """
         Recupera il prezzo corrente di qualsiasi strumento Yhaoo Finance
     - restituisce il prezzo come float, oppure None se non disponibile
@@ -24,7 +24,7 @@ def get_current_price(ticker):
         print(f" X errore nel recupero del prezzo per {ticker}: {e}")
         return None
     
-def get_all_prices(tickers):
+def get_all_prices(tickers: str):
     """Recupera i prezzi correnti di una lista di ticker in una sola chiamata.
     - tickers: lista di ticker es. ['VWCE.MI', 'GOLD.MI', 'WBIT.DE', 'XEON.MI']
     - restituisce un dizionario es. {'VWCE.MI': 161.61, 'GOLD.MI': 45.23, ...}
